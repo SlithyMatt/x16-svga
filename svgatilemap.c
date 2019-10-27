@@ -2,16 +2,21 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define DEFAULT_WIDTH 384
+
 void main(int argc, char **argv) {
    FILE *ofp;
 
    uint8_t odata[4096];
+   int width;
+   int height;
    int address;
    int i,j;
    int tileidx;
+   int minx,miny,maxx,maxy;
 
    if (argc < 2) {
-      printf("Usage: %s [tilemap file] [load address]\n", argv[0]);
+      printf("Usage: %s [tilemap file] [width] [load address]\n", argv[0]);
       return;
    }
 
@@ -21,9 +26,22 @@ void main(int argc, char **argv) {
       return;
    }
 
+   if (argc >= 3) {
+      width = atoi(argv[2]);
+   } else {
+      width = DEFAULT_WIDTH;
+   }
+
+   width = width/16;
+   height = 496/width;
+   minx = (40-width)/2;
+   maxx = minx + width - 1;
+   miny = (30-height)/2;
+   maxy = miny + height - 1;
+
    // start 12-bit with default address
    if (argc >= 4) {
-      sscanf(argv[2],"%x",&address);
+      sscanf(argv[3],"%x",&address);
    } else {
       // set default load address to 0x4000
       address = 0x4000;
@@ -35,7 +53,7 @@ void main(int argc, char **argv) {
    tileidx = 1;
    for (i=0;i<32;i++) {
       for (j=0;j<64;j++) {
-         if ((j < 8) || (j>31) || (i < 5) || (i > 24)) {
+         if ((j < minx) || (j > maxx) || (i < miny) || (i > maxy)) {
             odata[(i*64+j)*2] = 0x00;
             odata[(i*64+j)*2+1] = 0x00;
          } else {

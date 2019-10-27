@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
-   echo "Usage: $0 [raw image data file]"
+if [ $# -lt 2 ]; then
+   echo "Usage: $0 [raw image data file] [width]"
    exit 1
 fi
 
@@ -19,6 +19,6 @@ if [ ! -f $pal ]; then
    exit 1
 fi
 
-./svgatilemap.exe TILEMAP.BIN 0000
-./maketiles.exe $raw TILES.BIN 1000
+./svgatilemap.exe TILEMAP.BIN $2 0000
+./maketiles.exe $raw TILES.BIN $2 1000
 ./pal12bit.exe $pal PAL.BIN 1000
