@@ -1,0 +1,5 @@
+tilemap: 0-fff
+tiles: 01000-1ffff (496)
+   tile 0: black
+   tiles 1-480: image
+   tiles 481-495: spare
